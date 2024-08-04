@@ -2,7 +2,7 @@ package com.example.vdsapp.network.models.requests
 
 import com.google.gson.annotations.SerializedName
 
-data class CreateServerRequest(
+data class CreateServer(
     @SerializedName("make_from") var makeFrom: String,
     @SerializedName("rplan") var rplan: String,
     @SerializedName("do_start") var doStart: Boolean,

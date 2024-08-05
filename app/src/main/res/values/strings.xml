@@ -4,4 +4,6 @@
     <string name="loading">Загрузка</string>
     <string name="retry">Повторить</string>
     <string name="new_token">Задать новый токен</string>
+    <string name="account_button">Аккаунт</string>
+    <string name="home_button">Управление серверами</string>
 </resources>

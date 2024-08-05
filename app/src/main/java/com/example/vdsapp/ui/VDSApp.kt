@@ -12,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.vdsapp.data.TokenManager
+import com.example.vdsapp.ui.components.CenteredNavigationBar
 import com.example.vdsapp.ui.screens.AccountManager
 import com.example.vdsapp.ui.screens.TokenInputScreen
 
@@ -49,11 +50,14 @@ fun VDSApp(
                         accountUiState = accountViewModel.accountUiState.value,
                         retryAction = { accountViewModel.getAccountInfo(token ?: "") },
                         navController = navController,
-                        exitAction = {tokenManager.token = null}
+                        exitAction = { tokenManager.token = null }
                     )
                 }
                 // composable("server") { ServerScreen(navController) }
             }
+        },
+        bottomBar = {
+            CenteredNavigationBar()
         }
     )
 }

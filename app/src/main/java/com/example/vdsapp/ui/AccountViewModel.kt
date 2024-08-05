@@ -43,6 +43,8 @@ class AccountViewModel(
                 AccountUiState.Error
             } catch (e: HttpException) {
                 AccountUiState.Error
+            } catch (e: retrofit2.HttpException) {
+                AccountUiState.Error
             }
         }
     }

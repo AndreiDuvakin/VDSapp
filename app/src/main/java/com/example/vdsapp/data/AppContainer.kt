@@ -9,7 +9,7 @@ interface AppContainer {
 }
 
 class DefaultAppContainer : AppContainer {
-    private val baseUrl = "http://api.vscale.io/"
+    private val baseUrl = "https://api.vscale.io/"
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())

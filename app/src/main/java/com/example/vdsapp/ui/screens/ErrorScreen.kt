@@ -9,10 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
 import com.example.vdsapp.R
 
 @Composable
-fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
+fun ErrorScreen(
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -21,6 +26,11 @@ fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
         Text(text = stringResource(id = R.string.loading_failed))
         Button(onClick = retryAction) {
             Text(text = stringResource(id = R.string.retry))
+        }
+        Button(onClick = {
+            navController.navigate("token_input")
+        }) {
+            Text(text = "Заменить токен")
         }
     }
 }

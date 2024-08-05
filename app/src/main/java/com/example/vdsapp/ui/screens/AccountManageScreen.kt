@@ -14,13 +14,16 @@ fun AccountManager(
     when (accountUiState) {
         is AccountUiState.Success -> AccountScreen(
             account = accountUiState.accountInfoGet,
+            navController = navController,
         )
 
         is AccountUiState.Loading -> LoadingScreen(
+            navController = navController,
         )
 
         is AccountUiState.Error -> ErrorScreen(
             retryAction = retryAction,
+            navController = navController,
         )
     }
 }

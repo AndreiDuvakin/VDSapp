@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">VDSapp</string>
-    <string name="loading_failed">Failed to load</string>
-    <string name="loading">Loading</string>
-    <string name="retry">Retry</string>
+    <string name="loading_failed">Ошибка загрузки</string>
+    <string name="loading">Загрузка</string>
+    <string name="retry">Повторить</string>
+    <string name="new_token">Задать новый токен</string>
 </resources>

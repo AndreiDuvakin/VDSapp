@@ -2,8 +2,13 @@ package com.example.vdsapp.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,14 +23,13 @@ fun LoadingScreen(
     navController: NavHostController
 ) {
     Box(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Image(
-            modifier = Modifier
-                .size(200.dp),
-            painter = painterResource(id = R.drawable.loading_img),
-            contentDescription = stringResource(id = R.string.loading)
+        CircularProgressIndicator(
+            modifier = Modifier.width(64.dp),
+            color = MaterialTheme.colorScheme.secondary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
         )
     }
 }

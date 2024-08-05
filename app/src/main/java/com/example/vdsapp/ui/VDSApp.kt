@@ -48,7 +48,8 @@ fun VDSApp(
                     AccountManager(
                         accountUiState = accountViewModel.accountUiState.value,
                         retryAction = { accountViewModel.getAccountInfo(token ?: "") },
-                        navController = navController
+                        navController = navController,
+                        exitAction = {tokenManager.token = null}
                     )
                 }
                 // composable("server") { ServerScreen(navController) }

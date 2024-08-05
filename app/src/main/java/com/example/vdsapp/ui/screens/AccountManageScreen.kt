@@ -9,12 +9,14 @@ import com.example.vdsapp.ui.AccountUiState
 fun AccountManager(
     accountUiState: AccountUiState,
     retryAction: () -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    exitAction: () -> Unit,
 ) {
     when (accountUiState) {
         is AccountUiState.Success -> AccountScreen(
             account = accountUiState.accountInfoGet,
             navController = navController,
+            exitAction = exitAction,
         )
 
         is AccountUiState.Loading -> LoadingScreen(

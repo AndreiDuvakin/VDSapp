@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,24 +23,25 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.vdsapp.R
 import com.example.vdsapp.network.models.responses.Server
+import com.example.vdsapp.ui.HomeViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ServerCard(server: Server) {
+fun ServerCard(
+    server: Server,
+    homeViewModel: HomeViewModel
+) {
     var showServerBottomSheet by remember {
         mutableStateOf(false)
     }
@@ -104,47 +103,38 @@ fun ServerCard(server: Server) {
                     color = statusColor
                 )
                 Box {
+                    IconButton(onClick = { actionExpanded = true }) {
+                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                    }
 
                     DropdownMenu(
                         expanded = actionExpanded,
                         onDismissRequest = { actionExpanded = false }
                     ) {
-                        DropdownMenuItem(
-                            text = {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    Icon(
-                                        Icons.Default.Refresh,
-                                        contentDescription = stringResource(id = R.string.reboot_server)
-                                    )
-                                    Text("Перезагрузить")
+                        if (server.status == "started") {
+                            DropdownMenuItem(
+                                text = { Text("Перезагрузить") },
+                                onClick = {
+                                    actionExpanded = false
+                                    homeViewModel.restartServer(server.ctid!!)
                                 }
-                            },
-                            onClick = {
-                                actionExpanded = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = {
-                                Row {
-                                    Icon(
-                                        Icons.Default.Close,
-                                        contentDescription = stringResource(id = R.string.stop_server)
-                                    )
-                                    Text("Остановить")
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Остановить") },
+                                onClick = {
+                                    actionExpanded = false
+                                    homeViewModel.stopServer(server.ctid!!)
                                 }
-                            },
-                            onClick = {
-                                actionExpanded = false
-                            }
-                        )
-                    }
-
-                    IconButton(onClick = {
-                        actionExpanded = true
-                    }) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                            )
+                        } else if (server.status == "stopped") {
+                            DropdownMenuItem(
+                                text = { Text("Запустить") },
+                                onClick = {
+                                    actionExpanded = false
+                                    homeViewModel.startServer(server.ctid!!)
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -173,4 +163,3 @@ fun ServerCard(server: Server) {
         }
     }
 }
-

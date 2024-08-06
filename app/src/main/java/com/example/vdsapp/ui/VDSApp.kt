@@ -62,7 +62,8 @@ fun VDSApp(
                     HomeManager(
                         homeUiState = homeViewModel.homeUiState.value,
                         navController = navController,
-                        retryAction = { homeViewModel.getServers(token ?: "") }
+                        retryAction = { homeViewModel.getServers(token ?: "") },
+                        homeViewModel = homeViewModel,
                     )
                 }
             }

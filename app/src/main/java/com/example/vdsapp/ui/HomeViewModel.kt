@@ -24,7 +24,7 @@ sealed interface HomeUiStates {
 
 class HomeViewModel(
     private val serversRepository: ServersRepository,
-    private val tokenManager: TokenManager,
+    private val tokenManager: TokenManager
 ) : ViewModel() {
     val homeUiState = mutableStateOf<HomeUiStates>(HomeUiStates.Loading)
 
@@ -45,6 +45,57 @@ class HomeViewModel(
                 HomeUiStates.Error
             } catch (e: retrofit2.HttpException) {
                 HomeUiStates.Error
+            }
+        }
+    }
+
+    fun restartServer(ctid: Int) {
+        tokenManager.token?.let { token ->
+            viewModelScope.launch {
+                try {
+                    serversRepository.restartServer(token, ctid)
+                    getServers(token)
+                } catch (e: IOException) {
+                    HomeUiStates.Error
+                } catch (e: HttpException) {
+                    HomeUiStates.Error
+                } catch (e: retrofit2.HttpException) {
+                    HomeUiStates.Error
+                }
+            }
+        }
+    }
+
+    fun stopServer(ctid: Int) {
+        tokenManager.token?.let { token ->
+            viewModelScope.launch {
+                try {
+                    serversRepository.stopServer(token, ctid)
+                    getServers(token)
+                } catch (e: IOException) {
+                    HomeUiStates.Error
+                } catch (e: HttpException) {
+                    HomeUiStates.Error
+                } catch (e: retrofit2.HttpException) {
+                    HomeUiStates.Error
+                }
+            }
+        }
+    }
+
+    fun startServer(ctid: Int) {
+        tokenManager.token?.let { token ->
+            viewModelScope.launch {
+                try {
+                    serversRepository.startServer(token, ctid)
+                    getServers(token)
+                } catch (e: IOException) {
+                    HomeUiStates.Error
+                } catch (e: HttpException) {
+                    HomeUiStates.Error
+                } catch (e: retrofit2.HttpException) {
+                    HomeUiStates.Error
+                }
             }
         }
     }

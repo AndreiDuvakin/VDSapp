@@ -19,10 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.vdsapp.R
 
 @Composable
-fun CenteredNavigationBar() {
+fun CenteredNavigationBar(
+    navHostController: NavHostController
+) {
     NavigationBar(
         modifier = Modifier
             .padding(10.dp)
@@ -39,7 +42,9 @@ fun CenteredNavigationBar() {
                 modifier = Modifier
                     .padding(10.dp)
                     .clip(CircleShape)
-                    .clickable { }
+                    .clickable {
+                        navHostController.navigate("home")
+                    }
                     .padding(20.dp)
             )
             Icon(
@@ -48,7 +53,9 @@ fun CenteredNavigationBar() {
                 modifier = Modifier
                     .padding(10.dp)
                     .clip(CircleShape)
-                    .clickable { }
+                    .clickable {
+                        navHostController.navigate("account")
+                    }
                     .padding(20.dp)
             )
         }

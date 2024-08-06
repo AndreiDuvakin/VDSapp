@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import com.example.vdsapp.data.TokenManager
 import com.example.vdsapp.ui.components.CenteredNavigationBar
 import com.example.vdsapp.ui.screens.AccountManager
+import com.example.vdsapp.ui.screens.HomeManager
 import com.example.vdsapp.ui.screens.TokenInputScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,8 +24,6 @@ fun VDSApp(
     tokenManager: TokenManager,
 ) {
     val token = tokenManager.token
-    val accountViewModel: AccountViewModel =
-        viewModel(factory = AccountViewModel.Factory)
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("VDS App") })
@@ -46,6 +45,9 @@ fun VDSApp(
                     )
                 }
                 composable("account") {
+                    val accountViewModel: AccountViewModel =
+                        viewModel(factory = AccountViewModel.Factory)
+
                     AccountManager(
                         accountUiState = accountViewModel.accountUiState.value,
                         retryAction = { accountViewModel.getAccountInfo(token ?: "") },
@@ -53,11 +55,22 @@ fun VDSApp(
                         exitAction = { tokenManager.token = null }
                     )
                 }
-                // composable("server") { ServerScreen(navController) }
+                composable("home") {
+                    val homeViewModel: HomeViewModel =
+                        viewModel(factory = HomeViewModel.Factory)
+
+                    HomeManager(
+                        homeUiState = homeViewModel.homeUiState.value,
+                        navController = navController,
+                        retryAction = { homeViewModel.getServers(token ?: "") }
+                    )
+                }
             }
         },
         bottomBar = {
-            CenteredNavigationBar()
+            CenteredNavigationBar(
+                navController
+            )
         }
     )
 }

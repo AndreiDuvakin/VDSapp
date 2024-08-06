@@ -31,7 +31,7 @@ fun VDSApp(
         content = { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = if (token == null) "token_input" else "account",
+                startDestination = if (token == null) "token_input" else "home",
                 Modifier.padding(innerPadding)
             ) {
                 composable("token_input") {

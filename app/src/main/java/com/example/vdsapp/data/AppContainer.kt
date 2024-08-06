@@ -1,11 +1,13 @@
 package com.example.vdsapp.data
 
 import com.example.vdsapp.network.AccountService
+import com.example.vdsapp.network.ServersService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 interface AppContainer {
     val accountRepository: AccountRepository
+    val serversRepository: ServersRepository
 }
 
 class DefaultAppContainer : AppContainer {
@@ -20,7 +22,15 @@ class DefaultAppContainer : AppContainer {
         retrofit.create(AccountService::class.java)
     }
 
+    private val retrofitGetServers : ServersService by lazy {
+        retrofit.create(ServersService::class.java)
+    }
+
     override val accountRepository: AccountRepository by lazy {
         NetworkAccountRepository(retrofitAccountInfo)
+    }
+
+    override val serversRepository: ServersRepository by lazy {
+        NetworkServersRepository(retrofitGetServers)
     }
 }

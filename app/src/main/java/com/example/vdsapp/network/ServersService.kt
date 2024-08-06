@@ -1,4 +1,4 @@
-package com.example.vdsapp.network.models
+package com.example.vdsapp.network
 
 import com.example.vdsapp.network.models.responses.Server
 import retrofit2.http.GET

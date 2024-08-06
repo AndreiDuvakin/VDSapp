@@ -9,42 +9,42 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.network.HttpException
 import com.example.vdsapp.VDSApplication
-import com.example.vdsapp.data.AccountRepository
+import com.example.vdsapp.data.ServersRepository
 import com.example.vdsapp.data.TokenManager
-import com.example.vdsapp.network.models.responses.Account
+import com.example.vdsapp.network.models.responses.Server
 import kotlinx.coroutines.launch
-import okio.IOException
+import java.io.IOException
 
-sealed interface AccountUiState {
-    data class Success(val accountInfoGet: Account) : AccountUiState
-    data object Error : AccountUiState
-    data object Loading : AccountUiState
+sealed interface HomeUiStates {
+    data class Success(val getServers: List<Server>) : HomeUiStates
+    data object Error : HomeUiStates
+    data object Loading : HomeUiStates
 }
 
-class AccountViewModel(
-    private val accountRepository: AccountRepository,
+
+class HomeViewModel(
+    private val serversRepository: ServersRepository,
     private val tokenManager: TokenManager,
 ) : ViewModel() {
-    var accountUiState = mutableStateOf<AccountUiState>(AccountUiState.Loading)
-        private set
+    val homeUiState = mutableStateOf<HomeUiStates>(HomeUiStates.Loading)
 
     init {
         tokenManager.token?.let {
-            getAccountInfo(it)
+            getServers(it)
         }
     }
 
-    fun getAccountInfo(token: String) {
+    fun getServers(token: String) {
         viewModelScope.launch {
-            accountUiState.value = AccountUiState.Loading
-            accountUiState.value = try {
-                AccountUiState.Success(accountRepository.getAccountInfo(token))
+            homeUiState.value = HomeUiStates.Loading
+            homeUiState.value = try {
+                HomeUiStates.Success(serversRepository.getServers(token))
             } catch (e: IOException) {
-                AccountUiState.Error
+                HomeUiStates.Error
             } catch (e: HttpException) {
-                AccountUiState.Error
+                HomeUiStates.Error
             } catch (e: retrofit2.HttpException) {
-                AccountUiState.Error
+                HomeUiStates.Error
             }
         }
     }
@@ -53,9 +53,9 @@ class AccountViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as VDSApplication)
-                val accountRepository = application.container.accountRepository
+                val serversRepository = application.container.serversRepository
                 val tokenManager = application.tokenManager
-                AccountViewModel(accountRepository = accountRepository, tokenManager = tokenManager)
+                HomeViewModel(serversRepository = serversRepository, tokenManager = tokenManager)
             }
         }
     }

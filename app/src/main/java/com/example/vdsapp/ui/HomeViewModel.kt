@@ -9,14 +9,20 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.network.HttpException
 import com.example.vdsapp.VDSApplication
+import com.example.vdsapp.data.ServerConfigurationRepository
 import com.example.vdsapp.data.ServersRepository
 import com.example.vdsapp.data.TokenManager
 import com.example.vdsapp.network.models.responses.Server
+import com.example.vdsapp.network.models.responses.ServerConfiguration
 import kotlinx.coroutines.launch
 import java.io.IOException
 
 sealed interface HomeUiStates {
-    data class Success(val getServers: List<Server>) : HomeUiStates
+    data class Success(
+        val getServers: List<Server>,
+        val configurations: List<ServerConfiguration>
+    ) : HomeUiStates
+
     data object Error : HomeUiStates
     data object Loading : HomeUiStates
 }
@@ -24,21 +30,24 @@ sealed interface HomeUiStates {
 
 class HomeViewModel(
     private val serversRepository: ServersRepository,
-    private val tokenManager: TokenManager
+    private val tokenManager: TokenManager,
+    private val serverConfigurationRepository: ServerConfigurationRepository,
 ) : ViewModel() {
     val homeUiState = mutableStateOf<HomeUiStates>(HomeUiStates.Loading)
 
     init {
         tokenManager.token?.let {
-            getServers(it)
+            loadData(it)
         }
     }
 
-    fun getServers(token: String) {
+    fun loadData(token: String) {
         viewModelScope.launch {
             homeUiState.value = HomeUiStates.Loading
             homeUiState.value = try {
-                HomeUiStates.Success(serversRepository.getServers(token))
+                val servers = serversRepository.getServers(token)
+                val configurations = serverConfigurationRepository.getAvailableConfigurations(token)
+                HomeUiStates.Success(servers, configurations)
             } catch (e: IOException) {
                 HomeUiStates.Error
             } catch (e: HttpException) {
@@ -54,7 +63,7 @@ class HomeViewModel(
             viewModelScope.launch {
                 try {
                     serversRepository.restartServer(token, ctid)
-                    getServers(token)
+                    loadData(token)
                 } catch (e: IOException) {
                     HomeUiStates.Error
                 } catch (e: HttpException) {
@@ -71,7 +80,7 @@ class HomeViewModel(
             viewModelScope.launch {
                 try {
                     serversRepository.stopServer(token, ctid)
-                    getServers(token)
+                    loadData(token)
                 } catch (e: IOException) {
                     HomeUiStates.Error
                 } catch (e: HttpException) {
@@ -88,7 +97,7 @@ class HomeViewModel(
             viewModelScope.launch {
                 try {
                     serversRepository.startServer(token, ctid)
-                    getServers(token)
+                    loadData(token)
                 } catch (e: IOException) {
                     HomeUiStates.Error
                 } catch (e: HttpException) {
@@ -104,9 +113,18 @@ class HomeViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as VDSApplication)
+
                 val serversRepository = application.container.serversRepository
+                val serverConfigurationRepository =
+                    application.container.serverConfigurationRepository
+
                 val tokenManager = application.tokenManager
-                HomeViewModel(serversRepository = serversRepository, tokenManager = tokenManager)
+
+                HomeViewModel(
+                    serversRepository = serversRepository,
+                    tokenManager = tokenManager,
+                    serverConfigurationRepository = serverConfigurationRepository,
+                )
             }
         }
     }

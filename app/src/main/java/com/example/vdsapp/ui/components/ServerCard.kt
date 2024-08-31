@@ -29,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.vdsapp.network.models.responses.Server
@@ -41,7 +40,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ServerCard(
     server: Server,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
 ) {
     var showServerBottomSheet by remember {
         mutableStateOf(false)
@@ -49,20 +48,6 @@ fun ServerCard(
 
     var actionExpanded by remember {
         mutableStateOf(false)
-    }
-
-    val statusText = when (server.status) {
-        "started" -> "Запущен"
-        "stopped" -> "Остановлен"
-        "billing" -> "Заблокирован"
-        else -> "Неизвестен"
-    }
-
-    val statusColor = when (server.status) {
-        "started" -> Color.Green
-        "stopped" -> Color.Red
-        "billing" -> Color.Yellow
-        else -> Color.Gray
     }
 
     val coroutineScope = rememberCoroutineScope()
@@ -73,9 +58,11 @@ fun ServerCard(
             onDismissRequest = {
                 showServerBottomSheet = false
             },
-            sheetState = sheetState
+            sheetState = sheetState,
         ) {
-            ServerBottomSheet(server = server)
+            ServerBottomSheet(
+                server = server,
+            )
         }
     }
 
@@ -91,18 +78,17 @@ fun ServerCard(
         elevation = CardDefaults.cardElevation(5.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
-        )
+        ),
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text(
-                    text = statusText,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = statusColor
-                )
+                ServerStatusBar(server.status)
+
                 Box {
                     IconButton(onClick = { actionExpanded = true }) {
                         Icon(Icons.Default.Settings, contentDescription = "Settings")
@@ -112,29 +98,33 @@ fun ServerCard(
                         expanded = actionExpanded,
                         onDismissRequest = { actionExpanded = false }
                     ) {
-                        if (server.status == "started") {
-                            DropdownMenuItem(
-                                text = { Text("Перезагрузить") },
-                                onClick = {
-                                    actionExpanded = false
-                                    homeViewModel.restartServer(server.ctid!!)
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Остановить") },
-                                onClick = {
-                                    actionExpanded = false
-                                    homeViewModel.stopServer(server.ctid!!)
-                                }
-                            )
-                        } else if (server.status == "stopped") {
-                            DropdownMenuItem(
-                                text = { Text("Запустить") },
-                                onClick = {
-                                    actionExpanded = false
-                                    homeViewModel.startServer(server.ctid!!)
-                                }
-                            )
+                        when (server.status) {
+                            "started" -> {
+                                DropdownMenuItem(
+                                    text = { Text("Перезагрузить") },
+                                    onClick = {
+                                        actionExpanded = false
+                                        homeViewModel.restartServer(server.ctid!!)
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Остановить") },
+                                    onClick = {
+                                        actionExpanded = false
+                                        homeViewModel.stopServer(server.ctid!!)
+                                    }
+                                )
+                            }
+
+                            "stopped" -> {
+                                DropdownMenuItem(
+                                    text = { Text("Запустить") },
+                                    onClick = {
+                                        actionExpanded = false
+                                        homeViewModel.startServer(server.ctid!!)
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -153,12 +143,20 @@ fun ServerCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(text = "Локация: ${LocationUtils.getCityNameByLocationCode(server.location ?: "")}")
+            Row(
+                Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    Modifier.fillMaxWidth()
+                ) {
+                    ServerTextItem(label = "План", value = server.rplan)
+                    ServerTextItem(
+                        label = "Локация",
+                        value = LocationUtils.getCityNameByLocationCode(server.location ?: "")
+                    )
+                }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(text = "Имя хоста: ${server.hostname ?: "Неизвестно"}")
-            Text(text = "Происхождение: ${server.madeFrom ?: "Неизвестно"}")
+            }
         }
     }
 }

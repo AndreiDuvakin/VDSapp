@@ -34,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.vdsapp.network.models.responses.Server
 import com.example.vdsapp.ui.HomeViewModel
+import com.example.vdsapp.utils.LocationUtils
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +67,6 @@ fun ServerCard(
 
     val coroutineScope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
-
 
     if (showServerBottomSheet) {
         ModalBottomSheet(
@@ -153,14 +153,12 @@ fun ServerCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(text = "План: ${server.rplan ?: "Неизвестен"}")
-            Text(text = "Локация: ${server.location ?: "Неизвестна"}")
+            Text(text = "Локация: ${LocationUtils.getCityNameByLocationCode(server.location ?: "")}")
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(text = "Имя хоста: ${server.hostname ?: "Неизвестно"}")
             Text(text = "Происхождение: ${server.madeFrom ?: "Неизвестно"}")
-
         }
     }
 }

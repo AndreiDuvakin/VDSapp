@@ -8,5 +8,5 @@ data class CreateServer(
     @SerializedName("do_start") var doStart: Boolean,
     @SerializedName("name") var name: String,
     @SerializedName("keys") var keys: List<Int>,
-    @SerializedName("location") var location: String
+    @SerializedName("location") var location: String,
 )

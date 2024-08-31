@@ -16,5 +16,5 @@ data class RebuildServer(
     @SerializedName("name") var name: String? = null,
     @SerializedName("deleted") var deleted: String? = null,
     @SerializedName("ctid") var ctid: Int? = null,
-    @SerializedName("public_address") var publicAddress: PublicAddress? = null
+    @SerializedName("public_address") var publicAddress: PublicAddress? = null,
 )

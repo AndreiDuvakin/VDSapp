@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 data class PrivateAddress(
     @SerializedName("gateway") var gateway: String? = null,
     @SerializedName("netmask") var netmask: String? = null,
-    @SerializedName("address") var address: String? = null
+    @SerializedName("address") var address: String? = null,
 )

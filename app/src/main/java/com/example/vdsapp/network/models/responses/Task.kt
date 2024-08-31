@@ -11,5 +11,5 @@ data class Task (
     @SerializedName("error") var error: Boolean? = null,
     @SerializedName("d_start") var dStart: String? = null,
     @SerializedName("method") var method: String? = null,
-    @SerializedName("d_end") var dEnd: String? = null
+    @SerializedName("d_end") var dEnd: String? = null,
 )

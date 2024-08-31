@@ -12,5 +12,5 @@ data class Backup (
     @SerializedName("size") var size: Int? = null,
     @SerializedName("locked") var locked: Boolean? = null,
     @SerializedName("location") var location: String? = null,
-    @SerializedName("created") var created: String? = null
+    @SerializedName("created") var created: String? = null,
 )

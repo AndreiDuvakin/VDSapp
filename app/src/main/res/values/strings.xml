@@ -8,4 +8,7 @@
     <string name="home_button">Управление серверами</string>
     <string name="stop_server">Остановить сервер</string>
     <string name="reboot_server">Перезагрузить сервер</string>
+    <string name="location_spb">Санкт-Петербург</string>
+    <string name="location_msk">Москва</string>
+
 </resources>

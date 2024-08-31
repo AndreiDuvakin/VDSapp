@@ -13,5 +13,5 @@ data class UserInfo (
     @SerializedName("mobile") var mobile: String? = null,
     @SerializedName("name") var name: String? = null,
     @SerializedName("state") var state: String? = null,
-    @SerializedName("surname") var surname: String? = null
+    @SerializedName("surname") var surname: String? = null,
 )

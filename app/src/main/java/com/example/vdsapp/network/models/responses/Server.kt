@@ -14,5 +14,5 @@ data class Server(
     @SerializedName("hostname") var hostname: String? = null,
     @SerializedName("location") var location: String? = null,
     @SerializedName("active") var active: Boolean? = null,
-    @SerializedName("made_from") var madeFrom: String? = null
+    @SerializedName("made_from") var madeFrom: String? = null,
 )

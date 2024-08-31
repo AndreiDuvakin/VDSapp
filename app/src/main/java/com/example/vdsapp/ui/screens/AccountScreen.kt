@@ -68,21 +68,24 @@ fun AccountScreen(
                         text = "Аккаунт",
                         fontSize = 25.sp,
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                        color = Color.Black
                     )
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    InfoRow(label = "Дата активации:", value = info.actdate)
-                    InfoRow(label = "Страна:", value = info.country)
-                    InfoRow(label = "Тип клиента (face_id):", value = info.faceId.toString())
-                    InfoRow(
-                        label = "Статус:",
-                        value = if (info.state == "1") "Активен" else "Неактивен"
+                    val infoItems = listOf(
+                        "Дата активации:" to info.actdate,
+                        "Страна:" to info.country,
+                        "Тип клиента (face_id):" to info.faceId.toString(),
+                        "Статус:" to if (info.state == "1") "Активен" else "Неактивен",
+                        "Электронная почта:" to info.email,
+                        "Имя:" to info.name,
+                        "Отчество:" to info.middlename,
+                        "Фамилия:" to info.surname
                     )
-                    InfoRow(label = "Электронная почта:", value = info.email)
-                    InfoRow(label = "Имя:", value = info.name)
-                    InfoRow(label = "Отчество:", value = info.middlename)
-                    InfoRow(label = "Фамилия:", value = info.surname)
+
+                    infoItems.forEach { (label, value) ->
+                        InfoRow(label = label, value = value)
+                    }
                 }
             }
             Button(

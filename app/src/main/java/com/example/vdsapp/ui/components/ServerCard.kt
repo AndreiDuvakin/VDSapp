@@ -63,6 +63,7 @@ fun ServerCard(
         "billing" -> Color.Yellow
         else -> Color.Gray
     }
+
     val coroutineScope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
 

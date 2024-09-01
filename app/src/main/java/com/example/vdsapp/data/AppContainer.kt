@@ -1,6 +1,7 @@
 package com.example.vdsapp.data
 
 import com.example.vdsapp.network.AccountService
+import com.example.vdsapp.network.PricesService
 import com.example.vdsapp.network.ServerConfigurationService
 import com.example.vdsapp.network.ServersService
 import retrofit2.Retrofit
@@ -9,7 +10,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 interface AppContainer {
     val accountRepository: AccountRepository
     val serversRepository: ServersRepository
-    val serverConfigurationRepository: ServerConfigurationRepository
+    val serverConfigurationRepository: ServerConfigurationsRepository
+    val pricesRepository: PricesRepository
 }
 
 class DefaultAppContainer : AppContainer {
@@ -32,6 +34,10 @@ class DefaultAppContainer : AppContainer {
         retrofit.create(ServerConfigurationService::class.java)
     }
 
+    private val retrofitPrices: PricesService by  lazy {
+        retrofit.create(PricesService::class.java)
+    }
+
     override val accountRepository: AccountRepository by lazy {
         NetworkAccountRepository(retrofitAccountInfo)
     }
@@ -40,7 +46,11 @@ class DefaultAppContainer : AppContainer {
         NetworkServersRepository(retrofitServers)
     }
 
-    override val serverConfigurationRepository: ServerConfigurationRepository by lazy {
-        NetworkServerConfigurationRepository(retrofitServerConfigurations)
+    override val serverConfigurationRepository: ServerConfigurationsRepository by lazy {
+        NetworkServerConfigurationsRepository(retrofitServerConfigurations)
+    }
+
+    override val pricesRepository: PricesRepository by  lazy {
+        NetworkPricesRepository(retrofitPrices)
     }
 }

@@ -9,9 +9,11 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.network.HttpException
 import com.example.vdsapp.VDSApplication
-import com.example.vdsapp.data.ServerConfigurationRepository
+import com.example.vdsapp.data.PricesRepository
+import com.example.vdsapp.data.ServerConfigurationsRepository
 import com.example.vdsapp.data.ServersRepository
 import com.example.vdsapp.data.TokenManager
+import com.example.vdsapp.network.models.responses.PriceData
 import com.example.vdsapp.network.models.responses.Server
 import com.example.vdsapp.network.models.responses.ServerConfiguration
 import kotlinx.coroutines.launch
@@ -20,7 +22,8 @@ import java.io.IOException
 sealed interface HomeUiStates {
     data class Success(
         val getServers: List<Server>,
-        val getConfigurations: List<ServerConfiguration>
+        val getConfigurations: List<ServerConfiguration>,
+        val getPrices: PriceData,
     ) : HomeUiStates
 
     data object Error : HomeUiStates
@@ -29,9 +32,10 @@ sealed interface HomeUiStates {
 
 
 class HomeViewModel(
-    private val serversRepository: ServersRepository,
     private val tokenManager: TokenManager,
-    private val serverConfigurationRepository: ServerConfigurationRepository,
+    private val serversRepository: ServersRepository,
+    private val serverConfigurationRepository: ServerConfigurationsRepository,
+    private val pricesRepository: PricesRepository,
 ) : ViewModel() {
     val homeUiState = mutableStateOf<HomeUiStates>(HomeUiStates.Loading)
 
@@ -47,7 +51,9 @@ class HomeViewModel(
             homeUiState.value = try {
                 val servers = serversRepository.getServers(token)
                 val configurations = serverConfigurationRepository.getAvailableConfigurations(token)
-                HomeUiStates.Success(servers, configurations)
+                val prices = pricesRepository.getPrices(token)
+
+                HomeUiStates.Success(servers, configurations, prices)
             } catch (e: IOException) {
                 HomeUiStates.Error
             } catch (e: HttpException) {
@@ -117,6 +123,7 @@ class HomeViewModel(
                 val serversRepository = application.container.serversRepository
                 val serverConfigurationRepository =
                     application.container.serverConfigurationRepository
+                val pricesRepository = application.container.pricesRepository
 
                 val tokenManager = application.tokenManager
 
@@ -124,6 +131,7 @@ class HomeViewModel(
                     serversRepository = serversRepository,
                     tokenManager = tokenManager,
                     serverConfigurationRepository = serverConfigurationRepository,
+                    pricesRepository = pricesRepository,
                 )
             }
         }

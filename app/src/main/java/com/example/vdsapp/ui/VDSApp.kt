@@ -70,7 +70,7 @@ fun VDSApp(
         },
         bottomBar = {
             CenteredNavigationBar(
-                navController
+                navController,
             )
         }
     )

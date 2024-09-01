@@ -8,7 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.vdsapp.network.models.responses.PriceData
 import com.example.vdsapp.network.models.responses.Server
+import com.example.vdsapp.network.models.responses.ServerConfiguration
 import com.example.vdsapp.ui.HomeViewModel
 import com.example.vdsapp.ui.components.ServerList
 
@@ -16,12 +18,16 @@ import com.example.vdsapp.ui.components.ServerList
 fun HomeScreen(
     servers: List<Server>,
     navController: NavHostController,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    serverConfigurations: List<ServerConfiguration>,
+    priceData: PriceData,
 ) {
     Column {
         ServerList(
             servers = servers,
             homeViewModel = homeViewModel,
+            serverConfigurations = serverConfigurations,
+            priceData = priceData,
         )
     }
 }

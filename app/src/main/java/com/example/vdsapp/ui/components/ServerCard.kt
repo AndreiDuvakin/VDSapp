@@ -31,7 +31,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.vdsapp.network.models.responses.PriceDetail
 import com.example.vdsapp.network.models.responses.Server
+import com.example.vdsapp.network.models.responses.ServerConfiguration
 import com.example.vdsapp.ui.HomeViewModel
 import com.example.vdsapp.utils.LocationUtils
 import kotlinx.coroutines.launch
@@ -41,14 +43,11 @@ import kotlinx.coroutines.launch
 fun ServerCard(
     server: Server,
     homeViewModel: HomeViewModel,
+    serverConfiguration: ServerConfiguration?,
+    currentPrice: PriceDetail?,
 ) {
-    var showServerBottomSheet by remember {
-        mutableStateOf(false)
-    }
-
-    var actionExpanded by remember {
-        mutableStateOf(false)
-    }
+    var showServerBottomSheet by remember { mutableStateOf(false) }
+    var actionExpanded by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
@@ -141,17 +140,21 @@ fun ServerCard(
                 style = MaterialTheme.typography.bodyMedium
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
             Row(
                 Modifier.fillMaxWidth()
             ) {
                 Column(
                     Modifier.fillMaxWidth()
                 ) {
-                    ServerTextItem(
-                        label = "Локация",
-                        value = LocationUtils.getCityNameByLocationCode(server.location ?: "")
+                    if (serverConfiguration != null && currentPrice != null) {
+                        ServerConfigurationRow(
+                            serverConfiguration,
+                            currentPrice,
+                        )
+                    }
+
+                    Text(
+                        LocationUtils.getCityNameByLocationCode(server.location ?: "")
                     )
                 }
 

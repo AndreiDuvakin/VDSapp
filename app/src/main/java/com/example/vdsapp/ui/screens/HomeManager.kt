@@ -18,6 +18,8 @@ fun HomeManager (
                 servers = homeUiState.getServers,
                 navController = navController,
                 homeViewModel = homeViewModel,
+                serverConfigurations = homeUiState.getConfigurations,
+                priceData = homeUiState.getPrices,
             )
         }
         is HomeUiStates.Loading -> {

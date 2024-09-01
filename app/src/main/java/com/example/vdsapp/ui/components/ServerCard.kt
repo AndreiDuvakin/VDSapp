@@ -149,7 +149,6 @@ fun ServerCard(
                 Column(
                     Modifier.fillMaxWidth()
                 ) {
-                    ServerTextItem(label = "План", value = server.rplan)
                     ServerTextItem(
                         label = "Локация",
                         value = LocationUtils.getCityNameByLocationCode(server.location ?: "")

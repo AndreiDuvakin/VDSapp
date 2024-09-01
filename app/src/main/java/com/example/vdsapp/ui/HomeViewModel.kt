@@ -20,7 +20,7 @@ import java.io.IOException
 sealed interface HomeUiStates {
     data class Success(
         val getServers: List<Server>,
-        val configurations: List<ServerConfiguration>
+        val getConfigurations: List<ServerConfiguration>
     ) : HomeUiStates
 
     data object Error : HomeUiStates

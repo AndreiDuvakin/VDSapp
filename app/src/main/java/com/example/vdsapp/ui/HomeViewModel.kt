@@ -16,6 +16,8 @@ import com.example.vdsapp.data.TokenManager
 import com.example.vdsapp.network.models.responses.PriceData
 import com.example.vdsapp.network.models.responses.Server
 import com.example.vdsapp.network.models.responses.ServerConfiguration
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -38,16 +40,20 @@ class HomeViewModel(
     private val pricesRepository: PricesRepository,
 ) : ViewModel() {
     val homeUiState = mutableStateOf<HomeUiStates>(HomeUiStates.Loading)
+    private var autoRefreshJob: Job? = null
 
     init {
         tokenManager.token?.let {
             loadData(it)
+            startAutoRefresh(it)
         }
     }
 
-    fun loadData(token: String) {
+    fun loadData(token: String, showLoading: Boolean = true) {
         viewModelScope.launch {
-            homeUiState.value = HomeUiStates.Loading
+            if (showLoading) {
+                homeUiState.value = HomeUiStates.Loading
+            }
             homeUiState.value = try {
                 val servers = serversRepository.getServers(token)
                 val configurations = serverConfigurationRepository.getAvailableConfigurations(token)
@@ -113,6 +119,19 @@ class HomeViewModel(
                 }
             }
         }
+    }
+
+    private fun startAutoRefresh(token: String, intervalMillis: Long = 3000L) {
+        autoRefreshJob = viewModelScope.launch {
+            while (true) {
+                delay(intervalMillis)
+                loadData(token, false)
+            }
+        }
+    }
+
+    fun stopAutoRefresh() {
+        autoRefreshJob?.cancel()
     }
 
     companion object {

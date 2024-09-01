@@ -7,42 +7,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import com.example.vdsapp.network.models.responses.PriceDetail
 import com.example.vdsapp.network.models.responses.ServerConfiguration
-import com.example.vdsapp.utils.MemoryConverter
-import com.example.vdsapp.utils.PriceConfigurationManipulator
-import com.example.vdsapp.utils.ToIntIfNecessary
+import com.example.vdsapp.utils.MemoryManipulator.formatMemoryValue
+import com.example.vdsapp.utils.PriceConfigurationManipulator.convertKopecksToRubles
+import com.example.vdsapp.utils.ToIntIfNecessary.toIntIfNecessary
 
 @Composable
 fun ServerConfigurationRow(
     serverConfiguration: ServerConfiguration,
     currentPrice: PriceDetail,
 ) {
-    val (memory, unitOfMeasurementMemory) = MemoryConverter.convertMbToGbIfNecessary(
-        serverConfiguration.memory,
-    )
-    val memoryAfterRounding = ToIntIfNecessary.toIntIfNecessary(memory)
-
-    val (diskSize, unitOfMeasurementDiskSize) = MemoryConverter.convertMbToGbIfNecessary(
-        serverConfiguration.disk,
-    )
-    val diskSizeAfterRounding = ToIntIfNecessary.toIntIfNecessary(diskSize)
-
-    val priceWithRubles = PriceConfigurationManipulator.convertKopecksToRubles(currentPrice.month)
-    val priceAfterRounded = ToIntIfNecessary.toIntIfNecessary(priceWithRubles)
+    val memoryText = formatMemoryValue(serverConfiguration.memory)
+    val diskSizeText = formatMemoryValue(serverConfiguration.disk)
+    val priceText = "${toIntIfNecessary(
+        convertKopecksToRubles(currentPrice.month)
+    )} ₽"
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text(
-            "$memoryAfterRounding $unitOfMeasurementMemory",
-        )
-        Text(
-            "$diskSizeAfterRounding $unitOfMeasurementDiskSize"
-        )
-        Text(
-            "${serverConfiguration.cpus} ЦП"
-        )
-        Text(
-            "$priceAfterRounded ₽"
-        )
+        Text(memoryText)
+        Text(diskSizeText)
+        Text("${serverConfiguration.cpus} ЦП")
+        Text(priceText)
     }
 }

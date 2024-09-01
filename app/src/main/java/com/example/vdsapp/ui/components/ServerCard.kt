@@ -1,14 +1,14 @@
 package com.example.vdsapp.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
@@ -28,14 +28,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.vdsapp.R
 import com.example.vdsapp.network.models.responses.PriceDetail
 import com.example.vdsapp.network.models.responses.Server
 import com.example.vdsapp.network.models.responses.ServerConfiguration
 import com.example.vdsapp.ui.HomeViewModel
-import com.example.vdsapp.utils.LocationUtils
+import com.example.vdsapp.utils.ServerInfoManipulator
+import com.example.vdsapp.utils.ServerInfoManipulator.getLogoByDistribution
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -129,23 +133,26 @@ fun ServerCard(
                 }
             }
 
-            Text(
-                text = server.name ?: "Без имени",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
-            )
-
-            Text(
-                text = "IP: ${server.publicAddress?.address ?: "Неизвестен"}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-
             Row(
-                Modifier.fillMaxWidth()
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(
-                    Modifier.fillMaxWidth()
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(0.8f),
                 ) {
+
+                    Text(
+                        text = server.name ?: "Без имени",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text(
+                        text = "IP: ${server.publicAddress?.address ?: "Неизвестен"}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                     if (serverConfiguration != null && currentPrice != null) {
                         ServerConfigurationRow(
                             serverConfiguration,
@@ -154,10 +161,19 @@ fun ServerCard(
                     }
 
                     Text(
-                        LocationUtils.getCityNameByLocationCode(server.location ?: "")
+                        ServerInfoManipulator.getCityNameByLocationCode(server.location ?: "")
                     )
                 }
-
+                if (server.madeFrom != null) {
+                    Image(
+                        getLogoByDistribution(server.madeFrom!!),
+                        stringResource(R.string.distribution),
+                        Modifier
+                            .fillMaxWidth()
+                            .weight(0.2f)
+                            .size(65.dp)
+                    )
+                }
             }
         }
     }

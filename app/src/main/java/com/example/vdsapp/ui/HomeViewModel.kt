@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import coil.network.HttpException
+import coil3.network.HttpException
 import com.example.vdsapp.VDSApplication
 import com.example.vdsapp.data.ServersRepository
 import com.example.vdsapp.data.TokenManager

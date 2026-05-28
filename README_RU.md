@@ -15,7 +15,7 @@
 - Список серверов
 
 ![img.png](imgs/img.png)
-![img.png](img.png)
+![img.png](imgs/img-2.png)
 
 ## Как запустить
 1. Открыть проект в Android Studio

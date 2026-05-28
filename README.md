@@ -15,7 +15,7 @@ The project is under development. Implemented:
 - List of servers
 
 ![img.png](imgs/img.png)
-![img.png](img.png)
+![img.png](imgs/img-2.png)
 
 ## How to launch
 1. Open the project in Android Studio
